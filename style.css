@@ -285,6 +285,19 @@ h2 {
   border-radius: 50%;
   cursor: pointer;
   font-size: 1.1rem;
+  font-size: 1.1rem;
+}
+
+#home-mobile-btn {
+  display: none;
+  /* Hidden by default (desktop) */
+}
+
+@media (max-width: 900px) {
+  #home-mobile-btn {
+    display: inline-block;
+    /* Show on mobile */
+  }
 }
 
 /* ================== CARDS ================== */
@@ -609,6 +622,13 @@ h2 {
     display: none;
   }
 
+  /* Keep gesture button visible even if it enters the hide class scope elsewhere, 
+     or ensure it's not hidden if it has the class. 
+     The HTML has 'badge hide' for Explore Premium but 'badge dark-badge' for Install App.
+     Gesture btn has 'badge dark-badge'. It is NOT marked with 'hide' class in HTML.
+     However, let's make sure the layout allows it.
+  */
+
   .sidebar {
     width: 80px;
   }
@@ -619,8 +639,18 @@ h2 {
   .box-p1,
   .box-p2,
   .badge {
+    /* The badge class hides All badges including gesture button if we are not careful. */
+    /* The user wants gesture button to stay. */
     display: none;
   }
+
+  /* Explicitly show gesture button and install app if needed, or just gesture */
+  #gesture-btn {
+    display: inline-flex !important;
+  }
+
+  /* Also keep Install App if desired, but user focused on gesture. 
+     Let's keep icons in sidebar centered. */
 
   .nav-option,
   .lib-option {
@@ -650,50 +680,154 @@ h2 {
 
   .main-content {
     border-radius: 0;
-    padding: 0 1rem 120px 1rem;
+    padding: 0 1rem 160px 1rem;
+    /* Increased padding bottom for taller player */
+  }
+
+  /* Typography Adjustments */
+  h2 {
+    font-size: 1.3rem;
+    margin: 1.5rem 0 1rem 0;
+  }
+
+  .card-title {
+    font-size: 0.9rem;
+  }
+
+  .card-info {
+    font-size: 0.8rem;
   }
 
   .sticky-nav {
     margin: 0 -1rem 1rem -1rem;
     padding: 0.8rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
 
+  .sticky-nav-options {
+    gap: 0.5rem;
+  }
+
+  #gesture-btn {
+    display: inline-flex !important;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  /* Re-structuring Music Player for Mobile */
   .music-player {
-    height: 120px;
-    flex-wrap: wrap;
+    height: auto;
+    flex-direction: column;
     padding: 1rem;
+    gap: 0.5rem;
+    bottom: 0;
   }
 
+  /* Top Row: Album */
   .album {
-    width: 70%;
+    width: 100%;
+    margin-bottom: 0.5rem;
+    justify-content: flex-start;
   }
 
-  .controls {
-    width: 30%;
-  }
-
+  /* Player Controls - enhanced spacing for touch */
   .player {
     width: 100%;
-    order: 3;
+    order: 2;
+    margin-bottom: 0.5rem;
+  }
+
+  .player-controls {
+    width: 100%;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Increase icon size for easier tapping */
+  .player-controls i {
+    font-size: 1.3rem;
+    padding: 0.5rem;
+    /* Touch padding */
+  }
+
+  .player-controls .fa-circle-play,
+  .player-controls .fa-circle-pause {
+    font-size: 2.8rem;
+    /* Slightly larger play button */
   }
 
   .playback-bar {
     width: 100%;
-  }
-
-  .cards-container {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
+    display: flex;
   }
 
   .curr-time,
-  .tot-time,
-  .controls i:not(.fa-music) {
+  .tot-time {
+    display: block;
+    font-size: 0.7rem;
+  }
+
+  /* Bottom Row: Volume */
+  .controls {
+    width: 100%;
+    justify-content: center;
+    order: 3;
+    margin-top: 0;
+  }
+
+  .sound-bar {
+    width: 80%;
+  }
+
+  /* Hide less important icons */
+  .controls i {
     display: none;
   }
 
-  .album-icons {
+  /* Show volume icon specifically */
+  .controls .fa-volume-high {
+    display: block;
+    margin-right: 0.5rem;
     font-size: 1.1rem;
-    margin-left: 0.5rem;
+  }
+
+  .controls .sound-bar {
+    display: block;
+  }
+
+  /* Styling changes for Cards on mobile */
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    /* Reduced gap for mobile */
+  }
+
+  .card {
+    padding: 0.8rem;
+    /* Slightly less padding on cards */
+  }
+}
+
+@media (max-width: 480px) {
+  .cards-container {
+    grid-template-columns: 1fr;
+    /* 1 column on very small screens */
+  }
+
+  .sticky-nav-icons {
+    display: none;
+  }
+
+  .sticky-nav {
+    justify-content: space-between;
+    /* Space out home and other options */
+  }
+
+  /* Make sure home button is visible and on left */
+  #home-mobile-btn {
+    font-size: 1.3rem;
   }
 }
