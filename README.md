@@ -25,4 +25,4 @@ This project uses **MediaPipe** for browser-based hand tracking.
 - MediaPipe Hands
 
 ## Live Demo
-🔗 
+🔗 https://spotiffy-clone.netlify.app/
