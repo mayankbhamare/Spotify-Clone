@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome (ONLY ONE, FIXED) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" href="./assets/logo.png">
+
+    <title>Spotify - Web Player: Music for everyone</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="main">
+
+        <!-- ========== SIDEBAR ========== -->
+        <nav class="sidebar">
+
+            <div class="nav">
+                <div class="nav-option" style="opacity: 1;">
+                    <i class="fa-solid fa-house"></i>
+                    <a href="#">Home</a>
+                </div>
+
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="What do you want to listen to?" class="search-input">
+                </div>
+            </div>
+
+            <div class="library">
+                <div class="option">
+                    <div class="lib-option nav-option">
+                        <i class="fa-solid fa-book-open"></i>
+                        <a href="#">Your Library</a>
+                    </div>
+                    <div class="icons">
+                        <i class="fa-solid fa-plus"></i>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </div>
+
+                <div class="lib-box">
+                    <div class="box">
+                        <p class="box-p1">Create your first playlist</p>
+                        <p class="box-p2">It's easy, we'll help you</p>
+                        <button class="badge" id="91">Create playlist</button>
+                    </div>
+
+                    <div class="box">
+                        <p class="box-p1">Let's find some podcasts to follow</p>
+                        <p class="box-p2">We'll keep you updated on new episodes</p>
+                        <button class="badge" id="90">Browse podcasts</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ========== MAIN CONTENT ========== -->
+        <main class="main-content">
+
+            <div class="sticky-nav">
+                <div class="sticky-nav-icons">
+                    <i class="fa-solid fa-chevron-left hide"></i>
+                    <i class="fa-solid fa-chevron-right hide"></i>
+                </div>
+
+                <div class="sticky-nav-options">
+                    <button class="badge hide" id="12">Explore Premium</button>
+                    <button class="badge dark-badge" id="124">
+                        <i class="fa-solid fa-download"></i> Install App
+                    </button>
+                    <button class="badge dark-badge" id="gesture-btn" style="margin-left: 10px;">
+                        <i class="fa-solid fa-hand-holding"></i> Gesture
+                    </button>
+                    <i class="fa-regular fa-user user-icon"></i>
+                </div>
+            </div>
+
+            <h2>Recently played</h2>
+            <div class="cards-container">
+                <div class="card play-song" data-playlist="english">
+                    <div class="img-container">
+                        <img src="assets/english.jpg" class="card-img">
+                        <button class="play-btn-hover"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <p class="card-title">Top English songs</p>
+                    <p class="card-info">Your daily updates of the most played tracks</p>
+                </div>
+            </div>
+
+            <h2>Trending now near you</h2>
+            <div class="cards-container">
+                <div class="card play-song" data-playlist="kabir_singh">
+                    <div class="img-container">
+                        <img src="assets/Kabir-Singh.jpg" class="card-img">
+                        <button class="play-btn-hover"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <p class="card-title">Kabir Singh</p>
+                    <p class="card-info">kaise hua..</p>
+                </div>
+                <div class="card play-song" data-playlist="chennai_express">
+                    <div class="img-container">
+                        <img src="assets/songposter6.jpg" class="card-img">
+                        <button class="play-btn-hover"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <p class="card-title">Chennai Express</p>
+                    <p class="card-info">Dance on Lungi Dance</p>
+                </div>
+                <div class="card play-song" data-playlist="romance">
+                    <div class="img-container">
+                        <img src="assets/srk.jpg" class="card-img">
+                        <button class="play-btn-hover"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <p class="card-title">Soulful Romance</p>
+                    <p class="card-info">Romance at it's Best</p>
+                </div>
+
+                <div class="card play-song" data-playlist="gym">
+                    <div class="img-container">
+                        <img src="assets/songposter5.jpg" class="card-img">
+                        <button class="play-btn-hover"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <p class="card-title">GYM motivation</p>
+                    <p class="card-info">Daily GYM Playlist</p>
+                </div>
+                <div class="card play-song" data-playlist="rockstar">
+                    <div class="img-container">
+                        <img src="assets/rockstar.jpg" class="card-img">
+                        <button class="play-btn-hover"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <p class="card-title">RockStar</p>
+                    <p class="card-info">Cult Romance....</p>
+                </div>
+                <!-- Added missing closing div if any, checking context. Container ends next line 145 -->
+            </div>
+
+            <h2>Featured Charts </h2>
+
+            <div class="cards-container">
+                <div class="card play-song" data-playlist="choo_lo">
+                    <div class="img-container">
+                        <img src="assets/choo lo.jpg" class="card-img">
+                        <button class="play-btn-hover"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <p class="card-title">Choo Lo</p>
+                    <p class="card-info">Your favourite sad songs</p>
+                </div>
+
+                <div class="card play-song" data-playlist="marathi">
+                    <div class="img-container">
+                        <img src="assets/Sairat.jpg" class="card-img">
+                        <button class="play-btn-hover"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <p class="card-title">Marathi Songs</p>
+                    <p class="card-info">Enjoy soulful Marathi music</p>
+                </div>
+
+                <div class="card play-song" data-playlist="thalapathy">
+                    <div class="img-container">
+                        <img src="assets/badass.jpg" class="card-img">
+                        <button class="play-btn-hover"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <p class="card-title">Thalapathy</p>
+                    <p class="card-info">Leo</p>
+                </div>
+                <div class="card play-song" data-playlist="arijit">
+                    <div class="img-container">
+                        <img src="assets/arjits.jpg" class="card-img">
+                        <button class="play-btn-hover"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <p class="card-title">Arijit Singh</p>
+                    <p class="card-info">Best of Arijit Songs</p>
+                </div>
+                <div class="card play-song" data-playlist="jab_tak_hai_jaan">
+                    <div class="img-container">
+                        <img src="assets/songposter2.webp" class="card-img">
+                        <button class="play-btn-hover"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <p class="card-title">Jab Tak Hai Jaan</p>
+                    <p class="card-info">Listen the Classic Yash Chopra</p>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="line"></div>
+            </div>
+
+        </main>
+
+        <!-- ========== MUSIC PLAYER ========== -->
+        <div class="music-player">
+
+            <!-- Album Info -->
+            <div class="album">
+                <img src="./assets/album.jpg" class="album-img">
+                <div class="song-info">
+                    <div class="song-title">Zinda Banda</div>
+                    <div class="song-artist">Anirudh</div>
+                </div>
+                <i class="fa-regular fa-heart album-icons"></i>
+                <i class="fa-regular fa-bookmark album-icons"></i>
+            </div>
+
+            <!-- Player Controls -->
+            <div class="player">
+                <div class="player-controls">
+                    <i class="fa-solid fa-shuffle"></i>
+                    <i class="fa-solid fa-backward-step"></i>
+                    <i class="fa-solid fa-circle-play" id="play"></i>
+                    <i class="fa-solid fa-forward-step"></i>
+                    <i class="fa-solid fa-repeat"></i>
+                </div>
+
+                <div class="playback-bar">
+                    <span class="curr-time">00:00</span>
+                    <input type="range" min="0" max="100" step="1" class="progress-bar">
+                    <span class="tot-time">00:00</span>
+                </div>
+            </div>
+
+            <!-- Extra Controls -->
+            <div class="controls">
+                <i class="fa-solid fa-music"></i>
+                <i class="fa-brands fa-bluetooth-b"></i>
+                <i class="fa-solid fa-computer"></i>
+                <input type="range" min="0" max="100" step="1" class="sound-bar">
+                <i class="fa-solid fa-expand"></i>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- AUDIO ELEMENT (IMPORTANT) -->
+    <audio id="audio">
+        <source src="./songs/Zinda Banda.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- JS -->
+    <script src="script.js"></script>
+
+    <!-- Gesture Control Logic -->
+    <video id="webcam" style="position: absolute; opacity: 0; pointer-events: none;" autoplay playsinline></video>
+    <script type="module" src="gesture_utils.js"></script>
+
+
+</body>
+
+</html>
