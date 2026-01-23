@@ -14,6 +14,11 @@ const likeIcon = document.querySelector(".album-icons.fa-heart");
 const saveIcon = document.querySelector(".album-icons.fa-bookmark");
 const searchInput = document.querySelector(".search-input");
 
+// Cache for optimized search & delegation
+let cardElementsCache = [];
+let searchableData = [];
+const cardsContainer = document.querySelector(".main-content"); // Container for event delegation
+
 // =================== DATA ===================
 const songs = [
   //start
@@ -255,6 +260,12 @@ const songs = [
     cover: "./assets/Kabir-Singh.jpg"
   },
   {
+    title: "Kaise Hua",
+    artist: "Sachet Tandon",
+    src: "./songs/Kaise Hua.mp3",
+    cover: "./assets/Kabir-Singh.jpg"
+  },
+  {
     title: "Mere Sohneya",
     artist: "Sachet Tandon, Parampara Thakur",
     src: "./songs/Mere Sohneya.mp3",
@@ -390,17 +401,18 @@ let isPlaying = false;
 let activePlaylist = []; // Array of song indices
 let activePlaylistIndex = 0; // Index within the activePlaylist array
 let isPlaylistActive = false;
+let savedSongs = JSON.parse(localStorage.getItem("savedSongs")) || []; // Initialize from Storage
 
 const posterPlaylists = {
-  english: [41, 42, 43],
-  kabir_singh: [36, 37, 38, 39, 40],
+  english: [42, 43, 44],
+  kabir_singh: [36, 37, 38, 39, 40, 41],
   chennai_express: [7, 8, 9, 10, 11],
-  romance: [47, 48, 49, 50, 51, 52, 53, 54, 55, 57],
+  romance: [48, 49, 50, 51, 52, 53, 54, 55, 56, 58],
   gym: [26, 27],
   rockstar: [17, 18, 19, 20, 21, 22, 23, 24, 25],
-  choo_lo: [58],
+  choo_lo: [59],
   marathi: [28, 29, 30, 31, 32, 33, 34, 35],
-  thalapathy: [44, 45, 46],
+  thalapathy: [45, 46, 47],
   arijit: [12, 13, 14, 15, 16],
   jab_tak_hai_jaan: [1, 2, 3, 4, 5, 6]
 };
@@ -414,6 +426,15 @@ function loadSong(index) {
   songArtistEl.innerText = song.artist;
   albumImgEl.src = song.cover;
   localStorage.setItem("currentSongIndex", index);
+
+  // Update Save Icon State
+  if (savedSongs.includes(index)) {
+    saveIcon.classList.add("saved", "fa-solid");
+    saveIcon.classList.remove("fa-regular");
+  } else {
+    saveIcon.classList.remove("saved", "fa-solid");
+    saveIcon.classList.add("fa-regular");
+  }
 }
 
 function playSong() {
@@ -449,14 +470,23 @@ function formatTime(time) {
 // Play Button Click
 playBtn.addEventListener("click", togglePlay);
 
-// Update Progress Bar & Time
+// Update Progress Bar & Time (Optimized: Throttle to once per second)
+let lastSecond = -1;
 audio.addEventListener("timeupdate", () => {
   if (audio.duration) {
+    const currentSecond = Math.floor(audio.currentTime);
+
+    // Always update progress bar visual (for smoothness)
     const progress = (audio.currentTime / audio.duration) * 100;
     progressBar.value = progress;
-    currTime.innerText = formatTime(audio.currentTime);
-    totTime.innerText = formatTime(audio.duration);
     progressBar.style.setProperty("--progress", `${progress}%`);
+
+    // Only update text labels if the second has changed (Saves DOM operations)
+    if (currentSecond !== lastSecond) {
+      lastSecond = currentSecond;
+      currTime.innerText = formatTime(audio.currentTime);
+      totTime.innerText = formatTime(audio.duration);
+    }
   }
 });
 
@@ -479,11 +509,14 @@ audio.addEventListener("ended", () => {
   nextSong();
 });
 
-// Card Clicks (Play specific song OR Playlist)
-cardElements.forEach(card => {
-  card.addEventListener("click", () => {
+// OPTIMIZED: Event Delegation (One listener for all cards instead of many)
+if (cardsContainer) {
+  cardsContainer.addEventListener("click", (e) => {
+    const card = e.target.closest(".play-song");
+    if (!card) return;
+
     const playlistKey = card.getAttribute("data-playlist");
-    if (playlistKey && posterPlaylists[playlistKey]) {
+    if (playlistKey && (posterPlaylists[playlistKey] || playlistKey === 'saved')) {
       startPlaylist(playlistKey);
       return;
     }
@@ -497,11 +530,17 @@ cardElements.forEach(card => {
       playSong();
     }
   });
-});
+}
 
 function startPlaylist(key) {
   isPlaylistActive = true;
-  activePlaylist = posterPlaylists[key];
+
+  if (key === 'saved') {
+    activePlaylist = savedSongs;
+  } else {
+    activePlaylist = posterPlaylists[key];
+  }
+
   activePlaylistIndex = 0;
 
   if (activePlaylist.length > 0) {
@@ -558,6 +597,15 @@ if (saveIcon) {
     saveIcon.classList.toggle("fa-regular");
     saveIcon.classList.toggle("fa-solid");
     saveIcon.classList.toggle("saved");
+
+    if (savedSongs.includes(currentSongIndex)) {
+      // Remove
+      savedSongs = savedSongs.filter(id => id !== currentSongIndex);
+    } else {
+      // Add
+      savedSongs.push(currentSongIndex);
+    }
+    localStorage.setItem("savedSongs", JSON.stringify(savedSongs));
   });
 }
 
@@ -568,10 +616,21 @@ audio.volume = savedVol / 100;
 volumeBar.value = savedVol;
 volumeBar.style.setProperty("--volume", `${savedVol}%`);
 
+// OPTIMIZED: Initialize search cache
+function initSearchCache() {
+  cardElementsCache = Array.from(document.querySelectorAll(".card"));
+  searchableData = cardElementsCache.map(card => ({
+    title: card.querySelector(".card-title")?.innerText.toLowerCase() || "",
+    info: card.querySelector(".card-info")?.innerText.toLowerCase() || "",
+    element: card
+  }));
+}
+initSearchCache();
+
 const alerts = {
   12: "Do You Have Money?",
   91: "We Don't have that much database for Songs",
-  90: "Padhai Likhai Karo",
+  90: "You are not allowed to use this",
   124: "Enjoy without installing"
 };
 
@@ -584,32 +643,17 @@ Object.keys(alerts).forEach(id => {
   }
 });
 
-// Search Functionality (Real-time filtering)
+// Search Functionality (OPTIMIZED: Uses cache and class-toggling)
 if (searchInput) {
   searchInput.addEventListener("input", () => {
     const query = searchInput.value.toLowerCase().trim();
-    const cards = document.querySelectorAll(".card");
 
-    cards.forEach(card => {
-      const title = card.querySelector(".card-title") ? card.querySelector(".card-title").innerText.toLowerCase() : "";
-      const info = card.querySelector(".card-info") ? card.querySelector(".card-info").innerText.toLowerCase() : "";
-
-      if (title.includes(query) || info.includes(query) || query === "") {
-        card.style.opacity = "1";
-        card.style.transform = "scale(1)";
-        card.style.filter = "grayscale(0)";
-        card.style.pointerEvents = "auto";
+    searchableData.forEach(item => {
+      if (item.title.includes(query) || item.info.includes(query) || query === "") {
+        item.element.classList.remove("hidden-card");
       } else {
-        card.style.opacity = "0.2";
-        card.style.transform = "scale(0.95)";
-        card.style.filter = "grayscale(1)";
-        card.style.pointerEvents = "none";
+        item.element.classList.add("hidden-card");
       }
-    });
-
-    // Keep all sections and containers visible as requested
-    document.querySelectorAll("h2, .cards-container").forEach(el => {
-      el.style.display = "";
     });
   });
 
